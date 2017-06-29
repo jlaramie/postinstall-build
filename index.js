@@ -178,7 +178,16 @@ function postinstallBuild () {
   // any helpful environment variables to indicate whether we're being
   // installed as a dependency or not. The best we can do is check whether
   // the parent directory is `node_modules`.
-  var isDependency = path.basename(path.dirname(CWD)) === 'node_modules'
+  var splitName = process.env.npm_package_name.split('/')
+  // The second part of this condition is for handling packages that are namespaced.
+  // If we detect the delimiter then we try and figure out how deep we are in and
+  // check for node_modules again.
+  var isDependency = path.basename(path.dirname(CWD)) === 'node_modules' ||
+                     (splitName.length > 1 &&
+                      path.basename(path.join.apply(path, [CWD].concat(
+                        splitName.map(function () {
+                          return '..'
+                        })))) === 'node_modules')
 
   if (flags.onlyAsDependency && !isDependency) {
     log.info(
