@@ -11,7 +11,7 @@
   },
   "main": "index.js",
   "bin": {
-    "postinstall-build": "cli.js"
+    "postinstall-build": "./cli.js"
   },
   "files": [
     "index.js",
